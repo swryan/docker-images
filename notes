@@ -23,8 +23,6 @@
 
  2168  docker pull ubuntu:20.04
 
- 2176  cp -r ~/dev/snopt777/src/ snopt-src
-
  2187  docker buildx --debug build .
 
  2196  docker run -it aviary-dev
