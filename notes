@@ -1,0 +1,30 @@
+ 2109  sudo apt-get update
+ 2110  sudo apt-get install ca-certificates curl
+ 2111  sudo install -m 0755 -d /etc/apt/keyrings
+ 2112  sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+ 2113  sudo chmod a+r /etc/apt/keyrings/docker.asc
+ 2114  echo   "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+  $(. /etc/os-release && echo "$VERSION_CODENAME") stable" |   sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+ 2130  sudo service --status-all
+ 2131  sudo service docker start
+ 2132  sudo service --status-all
+
+ 2136  sudo systemctl enable docker.service
+ 2137  sudo systemctl enable containerd.service
+
+ 2140  sudo vi /etc/docker/daemon.json
+
+ 2142  sudo service --status-all
+ 2143  sudo service docker stop
+ 2144  sudo service docker start
+
+ 2166  vi ~/.docker/config.json
+
+ 2168  docker pull ubuntu:20.04
+
+ 2176  cp -r ~/dev/snopt777/src/ snopt-src
+
+ 2187  docker buildx --debug build .
+
+ 2196  docker run -it aviary-dev
