@@ -1,12 +1,14 @@
-# This Docker File is for use by NASA Developers of OpenMDAO
-# The image will contain SNOPT, a proprietary software code, and cannot be distributed outside of NASA
+# This Docker File is for use by NASA Developers of OpenMDAO, Dymos, and Aviary
+# This file contains SNOPT, a proprietary software code, and cannot be distributed outside of NASA
 
 FROM ubuntu:20.04
 
 SHELL ["/bin/bash", "-c"]
 
 # Install updates
-RUN apt-get update -y && apt-get -y install wget git gfortran libblas-dev liblapack-dev
+RUN apt-get update -y && apt-get -y install wget git pip gfortran libblas-dev liblapack-dev
+    # texlive-latex-base texlive-latex-extra \
+    # texlive-latex-recommended texlive-pictures
 
 # Create user
 ENV USER=omdao
@@ -37,7 +39,10 @@ RUN source $HOME/miniforge3/etc/profile.d/conda.sh ;\
     build_pyoptsparse -s ~/snopt-src -v ;\
 
     git clone https://github.com/OpenMDAO/OpenMDAO.git ;\
-    python -m pip install -e 'OpenMDAO[all]'
+    python -m pip install -e 'OpenMDAO[all]' ;\
+
+    git clone https://github.com/OpenMDAO/dymos.git ;\
+    python -m pip install -e 'dymos[all]' ;\
 
 # Modify .bashrc
 RUN echo "## Always activate mdaowork environment on startup ##" >> ~/.bashrc ;\

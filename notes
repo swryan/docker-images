@@ -23,7 +23,7 @@
 
  2168  docker pull ubuntu:20.04
 
- 2187  docker buildx --debug build .
+ 2187  docker buildx --debug build . -t aviary-dev
 
 xxxx   docker images
 xxxx   docker tag cc1f0bb87472 aviary-dev

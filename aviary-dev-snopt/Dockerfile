@@ -10,46 +10,44 @@ RUN apt-get update -y && apt-get -y install wget git pip gfortran libblas-dev li
     # texlive-latex-base texlive-latex-extra \
     # texlive-latex-recommended texlive-pictures
 
-# Install Miniforge which gives us access to conda
-# from https://github.com/conda-forge/miniforge
-RUN wget -O Miniforge3.sh "https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-$(uname)-$(uname -m).sh" ;\
+# Create user
+ENV USER=omdao
+RUN adduser --shell /bin/bash --disabled-password ${USER}
+USER ${USER}
+WORKDIR /home/${USER}
+
+# Copy SNOPT source code into the container
+COPY ./snopt-src ./snopt-src
+
+# Install Miniforge
+RUN wget -q -O Miniforge3.sh "https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-$(uname)-$(uname -m).sh" ;\
     bash Miniforge3.sh -b ;\
     rm Miniforge3.sh ;\
     export PATH=$HOME/miniforge3/bin:$PATH ;\
     conda init bash
 
-# Create the conda environment
-RUN . "$HOME/miniforge3/etc/profile.d/conda.sh" ;\
+# Create conda environment
+RUN source $HOME/miniforge3/etc/profile.d/conda.sh ;\
+
     conda create -n mdaowork python=3.12 'numpy<2' scipy cython swig -y ;\
     conda activate mdaowork ;\
-    conda install matplotlib -y ;\
-    conda install mpi4py petsc4py -y ;\
-    conda install graphviz -y ;\
-    pip install pyparsing psutil objgraph plotly pyxdsm pydot
+    conda install matplotlib graphviz -y ;\
+    conda install mpi4py petsc4py=3.20 -y ;\
+    python -m pip install pyparsing psutil objgraph plotly pyxdsm pydot ;\
 
-# Copy SNOPT source code into the container
-COPY ./snopt-src ./snopt-src
+    python -m pip install git+https://github.com/openmdao/build_pyoptsparse ;\
+    build_pyoptsparse -s ~/snopt-src -v ;\
 
-# Install PyOptSparse into the conda environment
-RUN . "$HOME/miniforge3/etc/profile.d/conda.sh" ;\
-    conda activate mdaowork ;\
-    pip install git+https://github.com/openmdao/build_pyoptsparse ;\
-    build_pyoptsparse -s ./snopt-src -v
+    git clone https://github.com/OpenMDAO/OpenMDAO.git ;\
+    python -m pip install -e 'OpenMDAO[all]' ;\
 
-# Clone the OpenMDAO, Dymos, and Aviary repositories into the container
-RUN mkdir /OMDAO
-RUN git clone https://github.com/OpenMDAO/OpenMDAO.git /OMDAO/OpenMDAO
-RUN git clone https://github.com/OpenMDAO/dymos.git /OMDAO/Dymos
-RUN git clone https://github.com/OpenMDAO/Aviary.git /OMDAO/Aviary
+    git clone https://github.com/OpenMDAO/dymos.git ;\
+    python -m pip install -e 'dymos[all]' ;\
 
-# Install OpenMDAO, Dymos, and Aviary into the conda environment in developer mode
-RUN . "$HOME/miniforge3/etc/profile.d/conda.sh" ;\
-    conda activate mdaowork ;\
-    pip install -e '/OMDAO/OpenMDAO[all]' ;\
-    pip install -e '/OMDAO/Dymos[all]' ;\
-    pip install -e '/OMDAO/Aviary[test]'
+    git clone https://github.com/OpenMDAO/Aviary.git ;\
+    python -m pip install -e 'Aviary[test]'
 
-# Modify the Bashrc file
+# Modify .bashrc
 RUN echo "## Always activate mdaowork environment on startup ##" >> ~/.bashrc ;\
     echo "conda activate mdaowork" >> ~/.bashrc ;\
     echo "" >> ~/.bashrc ;\
@@ -59,7 +57,4 @@ RUN echo "## Always activate mdaowork environment on startup ##" >> ~/.bashrc ;\
     echo "" >> ~/.bashrc ;\
     echo "## Required for some newer MPI / libfabric instances" >> ~/.bashrc ;\
     echo "export RDMAV_FORK_SAFE=true" >> ~/.bashrc ;\
-    echo "" >> ~/.bashrc ;\
-    echo "## Always cd into OMDAO folder when bash starts ##" >> ~/.bashrc ;\
-    echo "cd /OMDAO" >> ~/.bashrc ;\
     echo "" >> ~/.bashrc
