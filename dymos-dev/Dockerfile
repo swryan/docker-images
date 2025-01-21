@@ -6,7 +6,7 @@ FROM ubuntu:20.04
 SHELL ["/bin/bash", "-c"]
 
 # Install updates
-RUN apt-get update -y && apt-get -y install wget git pip gfortran libblas-dev liblapack-dev
+RUN apt-get update -y && apt-get -y install wget git g++ gfortran make libblas-dev liblapack-dev
     # texlive-latex-base texlive-latex-extra \
     # texlive-latex-recommended texlive-pictures
 
