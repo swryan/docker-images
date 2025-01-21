@@ -1,5 +1,4 @@
-# This Docker File is for use by NASA Developers of OpenMDAO, Dymos, and Aviary
-# This file contains SNOPT, a proprietary software code, and cannot be distributed outside of NASA
+# This Docker File is for use by developers of OpenMDAO and Dymos
 
 FROM ubuntu:20.04
 

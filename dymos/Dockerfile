@@ -1,4 +1,4 @@
-# This Docker File is for use by developers of OpenMDAO, Dymos, and Aviary
+# This Docker File is for users of OpenMDAO and Dymos
 
 FROM ubuntu:20.04
 
@@ -34,14 +34,9 @@ RUN source $HOME/miniforge3/etc/profile.d/conda.sh ;\
     python -m pip install git+https://github.com/openmdao/build_pyoptsparse ;\
     build_pyoptsparse -v ;\
 
-    git clone https://github.com/OpenMDAO/OpenMDAO.git ;\
-    python -m pip install -e 'OpenMDAO[all]' ;\
+    python -m pip install 'OpenMDAO[all]' ;\
 
-    git clone https://github.com/OpenMDAO/dymos.git ;\
-    python -m pip install -e 'dymos[all]' ;\
-
-    git clone https://github.com/OpenMDAO/Aviary.git ;\
-    python -m pip install -e 'Aviary[test]'
+    python -m pip install 'dymos[all]' ;\
 
 # Modify .bashrc
 RUN echo "## Always activate mdaowork environment on startup ##" >> ~/.bashrc ;\
