@@ -36,7 +36,7 @@ RUN source $HOME/miniforge3/etc/profile.d/conda.sh ;\
 
     python -m pip install 'OpenMDAO[all]' ;\
 
-    python -m pip install 'dymos[all]' ;\
+    python -m pip install 'dymos[all]'
 
 # Modify .bashrc
 RUN echo "## Always activate mdaowork environment on startup ##" >> ~/.bashrc ;\
