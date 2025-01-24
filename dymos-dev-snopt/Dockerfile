@@ -1,4 +1,4 @@
-# This Docker File is for use by NASA Developers of OpenMDAO, Dymos, and Aviary
+# This Docker File is for use by NASA Developers of OpenMDAO and Dymos
 # This file contains SNOPT, a proprietary software code, and cannot be distributed outside of NASA
 
 FROM ubuntu:20.04
@@ -28,19 +28,27 @@ RUN wget -q -O Miniforge3.sh "https://github.com/conda-forge/miniforge/releases/
 
 # Create conda environment
 RUN source $HOME/miniforge3/etc/profile.d/conda.sh ;\
-
+    #
+    # Create conda environment
+    #
     conda create -n mdaowork python=3.12 'numpy<2' scipy cython swig -y ;\
     conda activate mdaowork ;\
     conda install matplotlib graphviz -y ;\
     conda install mpi4py petsc4py=3.20 -y ;\
     python -m pip install pyparsing psutil objgraph plotly pyxdsm pydot ;\
-
+    #
+    # Install pyoptsparse
+    #
     python -m pip install git+https://github.com/openmdao/build_pyoptsparse ;\
     build_pyoptsparse -s ~/snopt-src -v ;\
-
+    #
+    # Install OpenMDAO
+    #
     git clone https://github.com/OpenMDAO/OpenMDAO.git ;\
     python -m pip install -e 'OpenMDAO[all]' ;\
-
+    #
+    # Install Dymos
+    #
     git clone https://github.com/OpenMDAO/dymos.git ;\
     python -m pip install -e 'dymos[all]'
 

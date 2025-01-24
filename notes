@@ -29,3 +29,10 @@ xxxx   docker images
 xxxx   docker tag cc1f0bb87472 aviary-dev
 
  2196  docker run -it aviary-dev
+
+
+
+ docker run --name avdev -it swryan/aviary-dev:0.9.3-dev
+ {do some stuff and exit}
+ docker start -ai avdev
+ {connect to same container, changes persist}

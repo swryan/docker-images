@@ -24,22 +24,32 @@ RUN wget -q -O Miniforge3.sh "https://github.com/conda-forge/miniforge/releases/
 
 # Create conda environment
 RUN source $HOME/miniforge3/etc/profile.d/conda.sh ;\
-
+    #
+    # Create conda environment
+    #
     conda create -n mdaowork python=3.12 'numpy<2' scipy cython swig -y ;\
     conda activate mdaowork ;\
     conda install matplotlib graphviz -y ;\
     conda install mpi4py petsc4py=3.20 -y ;\
     python -m pip install pyparsing psutil objgraph plotly pyxdsm pydot ;\
-
+    #
+    # Install pyoptsparse
+    #
     python -m pip install git+https://github.com/openmdao/build_pyoptsparse ;\
     build_pyoptsparse -v ;\
-
+    #
+    # Install OpenMDAO
+    #
     git clone https://github.com/OpenMDAO/OpenMDAO.git ;\
     python -m pip install -e 'OpenMDAO[all]' ;\
-
+    #
+    # Install Dymos
+    #
     git clone https://github.com/OpenMDAO/dymos.git ;\
     python -m pip install -e 'dymos[all]' ;\
-
+    #
+    # Install Aviary
+    #
     git clone https://github.com/OpenMDAO/Aviary.git ;\
     python -m pip install -e 'Aviary[test]'
 

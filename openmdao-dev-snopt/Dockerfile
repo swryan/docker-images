@@ -6,7 +6,7 @@ FROM ubuntu:20.04
 SHELL ["/bin/bash", "-c"]
 
 # Install updates
-RUN apt-get update -y && apt-get -y install wget git gfortran libblas-dev liblapack-dev
+RUN apt-get update -y && apt-get -y install wget git g++ gfortran make libblas-dev liblapack-dev
 
 # Create user
 ENV USER=omdao
@@ -26,7 +26,9 @@ RUN wget -q -O Miniforge3.sh "https://github.com/conda-forge/miniforge/releases/
 
 # Create conda environment
 RUN source $HOME/miniforge3/etc/profile.d/conda.sh ;\
-
+    #
+    # Create conda environment
+    #
     conda create -n mdaowork python=3.12 'numpy<2' scipy cython swig -y ;\
     conda activate mdaowork ;\
     conda install matplotlib graphviz -y ;\
@@ -35,7 +37,9 @@ RUN source $HOME/miniforge3/etc/profile.d/conda.sh ;\
 
     python -m pip install git+https://github.com/openmdao/build_pyoptsparse ;\
     build_pyoptsparse -s ~/snopt-src -v ;\
-
+    #
+    # Install OpenMDAO
+    #
     git clone https://github.com/OpenMDAO/OpenMDAO.git ;\
     python -m pip install -e 'OpenMDAO[all]'
 
