@@ -36,3 +36,30 @@ xxxx   docker tag cc1f0bb87472 aviary-dev
  {do some stuff and exit}
  docker start -ai avdev
  {connect to same container, changes persist}
+
+# to open another shell in a running container
+docker exec -it avdev /bin/bash
+
+
+# Using Docker for Desktop
+
+# Docker for Desktop is a full version of Docker that runs on your local machine.
+# It is a client-server application that includes the Docker CLI and the Docker Engine.
+# The Docker CLI is used to interact with the Docker Engine.
+# The Docker Engine is used to build, run, and manage Docker containers.
+# Docker for Desktop is available for Windows and Mac.
+# https://docs.docker.com/docker-for-windows/install/
+# https://docs.docker.com/docker-for-mac/install/
+
+> select "Docker Hub" on the left panel
+> search for "swryan"
+> select "swryan/aviary-dev"
+> click "Pull"
+> select "Images" on the left panel
+## click the Run icon on the right side of the "swryan/aviary-dev" row
+## expand "Optional Settings"
+## Enter a name for your container, e.g. "avdev"
+## click "Run"
+## Docker Desktop will start the container and open the "Logs" panel
+> select the "Exec" tab to open a terminal in the container
+> type "bash" to get a bash prompt, after which you will have access to the conda environment

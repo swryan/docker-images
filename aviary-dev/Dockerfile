@@ -64,3 +64,5 @@ RUN echo "## Always activate mdaowork environment on startup ##" >> ~/.bashrc ;\
     echo "## Required for some newer MPI / libfabric instances" >> ~/.bashrc ;\
     echo "export RDMAV_FORK_SAFE=true" >> ~/.bashrc ;\
     echo "" >> ~/.bashrc
+
+ENTRYPOINT ["tail", "-f", "/dev/null"]
