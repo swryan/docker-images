@@ -55,7 +55,7 @@ RUN source $HOME/miniforge3/etc/profile.d/conda.sh ;\
     # Install Aviary
     #
     git clone https://github.com/OpenMDAO/Aviary.git ;\
-    python -m pip install -e 'Aviary[test]'
+    python -m pip install -e 'Aviary[all]'
 
 # Modify .bashrc
 RUN echo "## Always activate mdaowork environment on startup ##" >> ~/.bashrc ;\
