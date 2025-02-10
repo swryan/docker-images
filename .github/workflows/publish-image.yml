@@ -4,11 +4,6 @@ on:
   # Allow running the workflow manually from the Actions tab
   workflow_dispatch:
    inputs:
-      run_name:
-        description: 'Name of workflow run as it will appear under Actions tab (optional):'
-        type: string
-        required: false
-        default: ''
       image_name:
         description: 'Enter the name of the image to build:'
         type: string
@@ -19,7 +14,9 @@ env:
   # Use docker.io for Docker Hub if empty
   REGISTRY: ghcr.io
   # github.repository as <account>/<repo>
-  IMAGE_NAME: ${{ github.repository_owner }}/${{ inputs.image_name }}
+  IMAGE_NAME: ${{ github.repository }}
+
+run-name:  'Publish Image: ${{ inputs.run_name }}'
 
 jobs:
   build:
@@ -31,7 +28,9 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
+      - run: |
+          git checkout -b ${{ inputs.run_name }}
 
       # Login against a Docker registry
       # https://github.com/docker/login-action
