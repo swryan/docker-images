@@ -57,5 +57,5 @@ jobs:
         with:
           push: true
           context: ${{ inputs.image_name }}
-          tags: ${{ inputs.image_name }}
+          tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
