@@ -18,9 +18,6 @@ RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 USER ${USER}
 WORKDIR /home/${USER}
 
-# Copy SNOPT source code into the container
-COPY ./snopt-src ./snopt-src
-
 # Install Miniforge
 RUN wget -q -O Miniforge3.sh "https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-$(uname)-$(uname -m).sh" ;\
     bash Miniforge3.sh -b ;\
@@ -80,7 +77,7 @@ RUN source $HOME/miniforge3/etc/profile.d/conda.sh ;\
     # Install pyoptsparse
     #
     python -m pip install git+https://github.com/openmdao/build_pyoptsparse ;\
-    build_pyoptsparse -s ~/snopt-src -v ;\
+    build_pyoptsparse -v ;\
     #
     # Install OpenMDAO
     #

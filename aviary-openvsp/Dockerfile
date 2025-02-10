@@ -1,4 +1,4 @@
-# This Docker File is for use by developers of OpenMDAO, Dymos, and Aviary
+# This Docker File is for users of OpenMDAO, Dymos, and Aviary
 
 FROM ubuntu:22.04
 
@@ -17,9 +17,6 @@ RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 
 USER ${USER}
 WORKDIR /home/${USER}
-
-# Copy SNOPT source code into the container
-COPY ./snopt-src ./snopt-src
 
 # Install Miniforge
 RUN wget -q -O Miniforge3.sh "https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-$(uname)-$(uname -m).sh" ;\
@@ -80,32 +77,27 @@ RUN source $HOME/miniforge3/etc/profile.d/conda.sh ;\
     # Install pyoptsparse
     #
     python -m pip install git+https://github.com/openmdao/build_pyoptsparse ;\
-    build_pyoptsparse -s ~/snopt-src -v ;\
+    build_pyoptsparse -v ;\
     #
     # Install OpenMDAO
     #
-    git clone https://github.com/OpenMDAO/OpenMDAO.git ;\
-    python -m pip install -e 'OpenMDAO[all]' ;\
+    python -m pip install 'OpenMDAO[all]' ;\
     #
     # Install Dymos
     #
-    git clone https://github.com/OpenMDAO/dymos.git ;\
-    python -m pip install -e 'dymos[all]' ;\
+    python -m pip install 'dymos[all]' ;\
     #
     # Install Aviary
     #
-    git clone https://github.com/OpenMDAO/Aviary.git ;\
-    python -m pip install -e 'Aviary[all]' ;\
+    python -m pip install 'om-aviary[all]'
     #
     # Install MPhys
     #
-    git clone https://github.com/OpenMDAO/MPhys.git ;\
-    python -m pip install -e 'MPhys[all]' ;\
+    python -m pip install 'MPhys[all]' ;\
     #
     # Install OpenAeroStruct
     #
-    git clone https://github.com/mdolab/OpenAeroStruct.git ;\
-    python -m pip install -e 'OpenAeroStruct' ;\
+    python -m pip install 'OpenAeroStruct' ;\
     #
     # Install OpenVSP Python support
     #
