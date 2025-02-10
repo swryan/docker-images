@@ -16,7 +16,7 @@ env:
   # github.repository as <account>/<repo>
   IMAGE_NAME: ${{ github.repository }}
 
-run-name:  'Publish Image: ${{ inputs.run_name }}'
+run-name:  'Publish Image: ${{ inputs.image_name }}'
 
 jobs:
   build:
@@ -30,7 +30,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
       - run: |
-          git checkout -b ${{ inputs.run_name }}
+          git checkout -b ${{ inputs.image_name }}
 
       # Login against a Docker registry
       # https://github.com/docker/login-action
