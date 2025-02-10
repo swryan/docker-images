@@ -1,6 +1,6 @@
 # This Docker File is for use by developers of OpenMDAO, Dymos, and Aviary
 
-FROM ubuntu:22.04
+FROM ubuntu:24.04
 
 SHELL ["/bin/bash", "-c"]
 

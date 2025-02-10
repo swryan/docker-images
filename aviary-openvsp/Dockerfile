@@ -1,8 +1,10 @@
 # This Docker File is for users of OpenMDAO, Dymos, and Aviary
 
-FROM ubuntu:22.04
+FROM ubuntu:24.04
 
 SHELL ["/bin/bash", "-c"]
+
+ARG DEBIAN_FRONTEND=noninteractive
 
 # Install updates
 RUN apt-get update -y && apt-get install \
