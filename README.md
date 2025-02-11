@@ -8,7 +8,7 @@ To get up and running with an OpenMDAO development environment, for example, you
 ```
 docker run --name openmdao ghcr.io/swryan/docker-images:openmdao-dev &
 ```
-This will pull the image from the GitHub Container Registry (ghcr) and run it, creating a container than you can attach to with:
+This will pull the image from the GitHub Container Registry (ghcr) and run it, creating a container that you can attach to with:
 ```
 docker exec -it openmdao /bin/bash
 ```
