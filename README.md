@@ -1,4 +1,4 @@
-This repository contains a collection of [Docker](https://www.docker.com/) image definitions that allow you to quickly create an environment for working with OpenMDAO and related application libraries.
+This repository contains a collection of [Docker](https://www.docker.com/) image definitions that allow you to quickly create an environment for working with OpenMDAO and related tools.
 
 ### Packages
   
