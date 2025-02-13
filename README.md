@@ -47,7 +47,7 @@ docker run --name omdev -v `pwd`/work:/home/omdao/work:rw -it openmdao-dev &
 docker exec -it omdev /bin/bash
 ```
 
-Each image contains the `google-chrome` browser for viewing OpenDMAO reports. To make use of this feature, you need to
+Each image contains the `google-chrome` browser for viewing OpenMAO reports. To make use of this feature, you need to
 set the `DISPLAY` environment variable in the container.
 
 On the host:
