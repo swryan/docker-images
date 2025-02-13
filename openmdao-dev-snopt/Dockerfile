@@ -1,16 +1,22 @@
 # This Docker File is for use by NASA Developers of OpenMDAO
 # The image will contain SNOPT, a proprietary software code, and cannot be distributed outside of NASA
 
-FROM ubuntu:20.04
+FROM ubuntu:24.04
 
 SHELL ["/bin/bash", "-c"]
 
 # Install updates
-RUN apt-get update -y && apt-get -y install wget git g++ gfortran make libblas-dev liblapack-dev
+RUN apt-get update -y && apt-get -y install sudo vim curl wget git g++ gfortran make cmake graphviz libblas-dev liblapack-dev
+
+RUN wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb ;\
+    apt-get install -y ./google-chrome-stable_current_amd64.deb
 
 # Create user
 ENV USER=omdao
 RUN adduser --shell /bin/bash --disabled-password ${USER}
+RUN adduser ${USER} sudo
+RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
+
 USER ${USER}
 WORKDIR /home/${USER}
 
@@ -34,7 +40,9 @@ RUN source $HOME/miniforge3/etc/profile.d/conda.sh ;\
     conda install matplotlib graphviz -y ;\
     conda install mpi4py petsc4py=3.20 -y ;\
     python -m pip install pyparsing psutil objgraph plotly pyxdsm pydot ;\
-
+    #
+    # Install pyoptsparse
+    #
     python -m pip install git+https://github.com/openmdao/build_pyoptsparse ;\
     build_pyoptsparse -s ~/snopt-src -v ;\
     #
@@ -54,5 +62,8 @@ RUN echo "## Always activate mdaowork environment on startup ##" >> ~/.bashrc ;\
     echo "## Required for some newer MPI / libfabric instances" >> ~/.bashrc ;\
     echo "export RDMAV_FORK_SAFE=true" >> ~/.bashrc ;\
     echo "" >> ~/.bashrc
+
+# Set up a work directory that can be shared with the host operating system
+WORKDIR /home/${USER}/work
 
 ENTRYPOINT ["tail", "-f", "/dev/null"]
