@@ -11,6 +11,9 @@ RUN apt-get update -y && apt-get install \
     python3-dev python3-sphinx vim unzip wget file desktop-file-utils git sudo make cmake swig g++ gfortran doxygen graphviz texlive-latex-base \
     libblas-dev liblapack-dev libxml2-dev libfltk1.3-dev libcpptest-dev libjpeg-dev libglm-dev libeigen3-dev libcminpack-dev libglew-dev -y
 
+RUN wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb ;\
+    apt-get install -y ./google-chrome-stable_current_amd64.deb
+
 # Create user
 ENV USER=omdao
 RUN adduser --shell /bin/bash --disabled-password ${USER}
@@ -114,5 +117,8 @@ RUN source $HOME/miniforge3/etc/profile.d/conda.sh ;\
     conda install wxPython ;\
     cd $HOME/OpenVSP/build/vsp/python_pseudo ;\
     pip install -r requirements-dev.txt
+
+# Set up a work directory that can be shared with the host operating system
+WORKDIR /home/${USER}/work
 
 ENTRYPOINT ["tail", "-f", "/dev/null"]

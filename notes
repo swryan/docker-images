@@ -63,3 +63,16 @@ docker exec -it avdev /bin/bash
 ## Docker Desktop will start the container and open the "Logs" panel
 > select the "Exec" tab to open a terminal in the container
 > type "bash" to get a bash prompt, after which you will have access to the conda environment
+
+
+
+# run image, map current directory to the work dir in the container
+# (make sure the current directory is writable by docker)
+# when working the 'work' directory in the container output files, etc will be accessible on the host
+ chmod 777 .
+ docker run --name omdev -v .:/home/omdao/work:rw -it openmdao-dev &
+ docker exec -it omdev /bin/bash
+
+# set DISPLAY for GUI apps (google-chrome has been installed as a browser for 'openmdao n2', etc.)
+(mdaowork) omdao@dbf0cc234e32:~/work$ export DISPLAY=172.21.192.1:0.0
+(mdaowork) omdao@dbf0cc234e32:~/work$ google-chrome &
