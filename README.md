@@ -1,4 +1,4 @@
-This repository contains a collection of [Docker](https://www.docker.com/) image definitions that allow you to quickly create an environment for working with OpenMDAO and related tools.
+This repository contains a collection of [Docker](https://www.docker.com/) image definitions that allow you to quickly create an environment for working with OpenMDAO and related tools.  You can substitute the [podman](https://podman.io) command for `docker` in the following examples if you prefer that tool.
 
 ## Packages
 
@@ -15,13 +15,13 @@ docker exec -it openmdao /bin/bash
 
 ## Docker Desktop
 
-If you use [Docker Desktop](https://docs.docker.com/desktop/), you can just pull down the image with:
+If you use [Docker Desktop](https://docs.docker.com/desktop/) or [podman desktop](https://podman-desktop.io/), you can just pull down the image with:
 ```
 docker pull ghcr.io/swryan/docker-images:openmdao-dev
 ```
 and then work with the downloaded image within that application.
 
-Note that the default shell when attaching to a container is `sh` and you will want to run a `bash` shell to access the pre-built Python environment.
+Note that the default shell when attaching to a container in Docker Desktop is `sh` and you will want to run a `bash` shell to access the pre-built Python environment.
 
 ## Build from Dockerfile
 
