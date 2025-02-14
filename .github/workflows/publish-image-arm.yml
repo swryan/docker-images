@@ -32,6 +32,9 @@ jobs:
       - run: |
           git checkout -b ${{ inputs.image_name }}
 
+      - run: |
+          security -v unlock-keychain ~/Library/Keychains/login.keychain-db
+
       # Login against a Docker registry
       # https://github.com/docker/login-action
       - name: Log into registry ${{ env.REGISTRY }}

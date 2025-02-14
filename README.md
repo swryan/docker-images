@@ -34,7 +34,7 @@ you may want to copy one of the `-snopt` image definitions to your computer, pop
 
 When you get a shell prompt into a container, you will start in an empty `work` directory.  You can map this directory to
 a directory on the host machine to make your working files available both inside and outside of the container.  This is
-done via the `-v` option on the command line as seen below (or in the docker.desktop UI).
+done via the `-v` option on the command line as seen below (or in the desktop UI).
 
 ```
 # make sure the host directory is writable by docker
