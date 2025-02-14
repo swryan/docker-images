@@ -1,4 +1,4 @@
-name: Publish Image
+name: Publish ARM64 Image
 
 on:
   # Run the workflow manually from the Actions tab
