@@ -70,9 +70,22 @@ docker exec -it avdev /bin/bash
 # (make sure the current directory is writable by docker)
 # when working the 'work' directory in the container output files, etc will be accessible on the host
  chmod 777 .
- docker run --name omdev -v .:/home/omdao/work:rw -it openmdao-dev &
+ docker run --name omdev -v ./work:/home/omdao/work:rw -it openmdao-dev &
  docker exec -it omdev /bin/bash
 
 # set DISPLAY for GUI apps (google-chrome has been installed as a browser for 'openmdao n2', etc.)
 (mdaowork) omdao@dbf0cc234e32:~/work$ export DISPLAY=172.21.192.1:0.0
 (mdaowork) omdao@dbf0cc234e32:~/work$ google-chrome &
+
+# build for ARM64
+docker buildx --debug build . -t swryan/aviary-openvsp-dev-arm64 --platform linux/arm64
+
+# podman can be installed on OSX via brew (without needing root privileges)
+brew install podman
+podman machine init
+podman machine start
+
+# SHELL is not supported for OCI image format, [/bin/bash -c] will be ignored. Must use docker format
+# https://github.com/containers/podman/issues/8477
+podman buildx build --format docker . -t openmdao-dev
+podman push 961549a77c61 docker://docker.io/swryan/openmdao-dev

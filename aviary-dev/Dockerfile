@@ -1,4 +1,4 @@
-# This Docker File is for use by developers of OpenMDAO, Dymos, and Aviary
+# Define an image that can be used for development using Aviary and its dependencies
 
 FROM ubuntu:24.04
 

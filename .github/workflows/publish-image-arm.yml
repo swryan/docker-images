@@ -29,11 +29,18 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
       - run: |
           git checkout -b ${{ inputs.image_name }}
 
       - run: |
           security -v unlock-keychain ~/Library/Keychains/login.keychain-db
+
+      - run: |
+          brew install docker docker-machine
+          brew cask install virtualbox
+          docker-machine create --driver virtualbox default
+          docker-machine env default
 
       # Login against a Docker registry
       # https://github.com/docker/login-action

@@ -12,8 +12,8 @@ RUN apt-get update -y && apt-get install \
     python3-dev python3-sphinx vim unzip wget file desktop-file-utils git sudo make cmake swig g++ gfortran doxygen graphviz texlive-latex-base \
     libblas-dev liblapack-dev libxml2-dev libfltk1.3-dev libcpptest-dev libjpeg-dev libglm-dev libeigen3-dev libcminpack-dev libglew-dev -y
 
-RUN wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb ;\
-    apt-get install -y ./google-chrome-stable_current_amd64.deb
+# RUN wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb ;\
+#     apt-get install -y ./google-chrome-stable_current_amd64.deb
 
 # Create user
 ENV USER=omdao

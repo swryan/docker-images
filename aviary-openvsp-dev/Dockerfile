@@ -1,4 +1,4 @@
-# This Docker File is for use by developers of OpenMDAO, Dymos, and Aviary
+# Define image to build OpenMDAO/Dymos/Aviary with OpenVSP support
 
 FROM ubuntu:24.04
 
