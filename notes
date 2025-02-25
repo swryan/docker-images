@@ -78,7 +78,11 @@ docker exec -it avdev /bin/bash
 (mdaowork) omdao@dbf0cc234e32:~/work$ google-chrome &
 
 # build for ARM64
+sudo apt-get install qemu binfmt-support qemu-user-static # Install the qemu packages
+docker run --rm --privileged multiarch/qemu-user-static --reset -p yes # This step will execute the registering scripts
+docker run --platform=linux/arm64/v8 --rm -t arm64v8/ubuntu uname -m # Testing the emulation environment
 docker buildx --debug build . -t swryan/aviary-openvsp-dev-arm64 --platform linux/arm64
+
 
 # podman can be installed on OSX via brew (without needing root privileges)
 brew install podman
@@ -89,3 +93,6 @@ podman machine start
 # https://github.com/containers/podman/issues/8477
 podman buildx build --format docker . -t openmdao-dev
 podman push 961549a77c61 docker://docker.io/swryan/openmdao-dev
+
+apptainer pull openmdao-337.sif docker://ghcr.io/openmdao/openmdao:3.3.7
+apptainer run openmdao-337.sif
