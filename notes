@@ -94,5 +94,11 @@ podman machine start
 podman buildx build --format docker . -t openmdao-dev
 podman push 961549a77c61 docker://docker.io/swryan/openmdao-dev
 
+$ docker login ghcr.io
+Username: swryan
+Password:
+Login Succeeded
+$ docker push ghcr.io/swryan/docker-images:aviary-arm64
+
 apptainer pull openmdao-337.sif docker://ghcr.io/openmdao/openmdao:3.3.7
 apptainer run openmdao-337.sif

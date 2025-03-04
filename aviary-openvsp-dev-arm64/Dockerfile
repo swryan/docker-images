@@ -7,18 +7,20 @@ SHELL ["/bin/bash", "-c"]
 ARG DEBIAN_FRONTEND=noninteractive
 
 # Install updates
-RUN apt-get update -y && apt-get install sudo wget git g++ gfortran make cmake libblas-dev liblapack-dev -y
-    # python3-dev python3-sphinx vim unzip file desktop-file-utils swig doxygen graphviz texlive-latex-base \
-    # libxml2-dev libfltk1.3-dev libcpptest-dev libjpeg-dev libglm-dev libeigen3-dev libcminpack-dev libglew-dev -y
+RUN apt-get update -y && apt-get install sudo wget git g++ gfortran make cmake libblas-dev liblapack-dev libxml2-dev \
+    python3-dev python3-sphinx vim unzip file desktop-file-utils swig doxygen graphviz \
+    # texlive-latex-base \
+    libfltk1.3-dev libcpptest-dev libjpeg-dev libglm-dev libeigen3-dev libcminpack-dev libglew-dev -y
 
-# RUN wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb ;\
-#     apt-get install -y ./google-chrome-stable_current_amd64.deb
+# install a browser
+RUN apt-get install chromium-browser -y
 
 # Create user
 ENV USER=omdao
 RUN adduser --shell /bin/bash --disabled-password ${USER}
 RUN adduser ${USER} sudo
 RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
+RUN chmod u+s /usr/bin/sudo
 
 USER ${USER}
 WORKDIR /home/${USER}
@@ -47,27 +49,32 @@ RUN echo "## Always activate mdaowork environment on startup ##" >> ~/.bashrc ;\
     echo "" >> ~/.bashrc
 
 # Build and Install OpenVSP (based on script from Irian Ordaz @ LARC)
-# RUN source $HOME/miniforge3/etc/profile.d/conda.sh ;\
-#     conda activate mdaowork ;\
-#     mkdir OpenVSP && cd OpenVSP ;\
-#     git clone https://github.com/OpenVSP/OpenVSP.git repo ;\
-#     cd repo ;\
-#     git checkout tags/OpenVSP_3.41.1 -b OpenVSP_3.41.1 ;\
-#     cd .. ;\
-#     mkdir -p build/Libraries build/vsp ;\
-#     cd build/Libraries ;\
-#     cmake -DCMAKE_BUILD_TYPE=Release -DVSP_NO_GRAPHICS=true ../../repo/Libraries ;\
-#     make ;\
-#     cd ../vsp ;\
-#     cmake -DCMAKE_BUILD_TYPE=Release -DVSP_NO_GRAPHICS=true \
-#           -DPYTHON_LIBRARY=$HOME/miniforge3/envs/mdaowork/lib/libpython3.so \
-#           -DPYTHON_INCLUDE_DIR=$HOME/miniforge3/envs/mdaowork/include/python3.11 \
-#           -DVSP_LIBRARY_PATH=$HOME/OpenVSP/build/Libraries \
-#           ../../repo/src ;\
-#     make ;\
-#     cd vsp ;\
-#     make;\
-#     sudo make install
+RUN source $HOME/miniforge3/etc/profile.d/conda.sh ;\
+    conda activate mdaowork ;\
+    mkdir OpenVSP && cd OpenVSP ;\
+    git clone https://github.com/OpenVSP/OpenVSP.git repo ;\
+    cd repo ;\
+    git checkout tags/OpenVSP_3.41.1 -b OpenVSP_3.41.1 ;\
+    cd .. ;\
+    mkdir -p build/Libraries build/vsp ;\
+    cd build/Libraries ;\
+    cmake -DCMAKE_BUILD_TYPE=Release -DVSP_NO_GRAPHICS=true \
+          -DCMAKE_CXX_FLAGS="${CMAKE_CXX_FLAGS} -fPIC" \
+          -DCMAKE_C_FLAGS="${CMAKE_C_FLAGS} -fPIC" \
+          ../../repo/Libraries ;\
+    make ;\
+    cd ../vsp ;\
+    cmake -DCMAKE_BUILD_TYPE=Release -DVSP_NO_GRAPHICS=true \
+          -DPYTHON_LIBRARY=$HOME/miniforge3/envs/mdaowork/lib/libpython3.so \
+          -DPYTHON_INCLUDE_DIR=$HOME/miniforge3/envs/mdaowork/include/python3.11 \
+          -DVSP_LIBRARY_PATH=$HOME/OpenVSP/build/Libraries \
+          -DCMAKE_CXX_FLAGS="${CMAKE_CXX_FLAGS} -fPIC" \
+          -DCMAKE_C_FLAGS="${CMAKE_C_FLAGS} -fPIC" \
+          ../../repo/src ;\
+    make ;\
+    cd vsp ;\
+    make ;\
+    sudo make install
 
 # Install OpenMDAO/Dymos/Aviary into conda environment
 RUN source $HOME/miniforge3/etc/profile.d/conda.sh ;\
