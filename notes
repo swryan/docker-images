@@ -102,3 +102,35 @@ $ docker push ghcr.io/swryan/docker-images:aviary-arm64
 
 apptainer pull openmdao-337.sif docker://ghcr.io/openmdao/openmdao:3.3.7
 apptainer run openmdao-337.sif
+
+# allocate more memory and cpus to the podman machine
+podman machine stop
+podman machine set --cpus 2 --memory 2048
+podman machine start
+
+
+#
+# build VTK
+#
+sudo apt install \
+    build-essential \
+    cmake \
+    cmake-curses-gui \
+    mesa-common-dev \
+    mesa-utils \
+    freeglut3-dev \
+    ninja-build
+
+wget https://www.vtk.org/files/release/9.4/VTK-9.4.1.tar.gz
+tar -xvf VTK-9.4.1.tar.gz
+mkdir vtk
+mv VTK-9.4.1 vtk/source
+
+cd vtk
+mkdir build
+cd build
+ccmake -GNinja ../source
+ccmake ../source  (just do 'cmake --build')
+make
+sudo 1make install
+

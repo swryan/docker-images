@@ -13,7 +13,7 @@ RUN apt-get update -y && apt-get install sudo wget git g++ gfortran make cmake l
     libfltk1.3-dev libcpptest-dev libjpeg-dev libglm-dev libeigen3-dev libcminpack-dev libglew-dev -y
 
 # install a browser
-RUN apt-get install chromium-browser -y
+RUN apt-get update -y && apt-get install firefox --fix-missing -y
 
 # Create user
 ENV USER=omdao
@@ -34,7 +34,7 @@ RUN wget -q -O Miniforge3.sh "https://github.com/conda-forge/miniforge/releases/
 
 # Create conda environment
 RUN source $HOME/miniforge3/etc/profile.d/conda.sh ;\
-    conda create -n mdaowork python=3.11 'numpy<2' scipy cython swig -y
+    conda create -n mdaowork python=3.11 'numpy<2' scipy cython swig cmake -y
 
 # Modify .bashrc
 RUN echo "## Always activate mdaowork environment on startup ##" >> ~/.bashrc ;\
@@ -47,6 +47,21 @@ RUN echo "## Always activate mdaowork environment on startup ##" >> ~/.bashrc ;\
     echo "## Required for some newer MPI / libfabric instances" >> ~/.bashrc ;\
     echo "export RDMAV_FORK_SAFE=true" >> ~/.bashrc ;\
     echo "" >> ~/.bashrc
+
+# Build and Install VTK, which is needed by OpenVSP
+RUN source $HOME/miniforge3/etc/profile.d/conda.sh ;\
+    conda activate mdaowork ;\
+    wget -q https://www.vtk.org/files/release/9.4/VTK-9.4.1.tar.gz  ;\
+    tar -xzpf VTK-9.4.1.tar.gz ;\
+    mkdir vtk ;\
+    mv VTK-9.4.1 vtk/source ;\
+    cd vtk ;\
+    mkdir build ;\
+    cd build ;\
+    ls -l ../source ;\
+    cmake ../source ;\
+    make ;\
+    sudo make install
 
 # Build and Install OpenVSP (based on script from Irian Ordaz @ LARC)
 RUN source $HOME/miniforge3/etc/profile.d/conda.sh ;\
@@ -118,9 +133,9 @@ RUN source $HOME/miniforge3/etc/profile.d/conda.sh ;\
     #
     # Install OpenVSP Python support
     #
-    # conda install wxPython ;\
-    # cd $HOME/OpenVSP/build/vsp/python_pseudo ;\
-    # pip install -r requirements-dev.txt
+    conda install wxPython ;\
+    cd $HOME/OpenVSP/build/vsp/python_pseudo ;\
+    pip install -r requirements-dev.txt
 
 # Set up a work directory that can be shared with the host operating system
 WORKDIR /home/${USER}/work
