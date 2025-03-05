@@ -129,7 +129,7 @@ RUN source $HOME/miniforge3/etc/profile.d/conda.sh ;\
     # Install OpenAeroStruct
     #
     git clone https://github.com/mdolab/OpenAeroStruct.git ;\
-    python -m pip install -e 'OpenAeroStruct'
+    python -m pip install -e 'OpenAeroStruct' ;\
     #
     # Install OpenVSP Python support
     #
