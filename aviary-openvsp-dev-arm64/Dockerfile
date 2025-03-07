@@ -10,7 +10,7 @@ ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get update -y && apt-get install sudo wget git g++ gfortran make cmake libblas-dev liblapack-dev libxml2-dev \
     python3-dev python3-sphinx vim unzip file desktop-file-utils swig doxygen graphviz \
     # texlive-latex-base \
-    libfltk1.3-dev libcpptest-dev libjpeg-dev libglm-dev libeigen3-dev libcminpack-dev libglew-dev -y
+    libfltk1.3-dev libcpptest-dev libjpeg-dev libglm-dev libeigen3-dev libcminpack-dev libglew-dev libgtk-3-dev -y
 
 # install a browser
 RUN apt-get update -y && apt-get install firefox --fix-missing -y
@@ -39,6 +39,8 @@ RUN source $HOME/miniforge3/etc/profile.d/conda.sh ;\
 # Modify .bashrc
 RUN echo "## Always activate mdaowork environment on startup ##" >> ~/.bashrc ;\
     echo "conda activate mdaowork" >> ~/.bashrc ;\
+    echo "export PYTHONPATH=${PYTHONPATH}:/home/omdao/vtk/build/lib/python3.11/site-packages" >> ~/.bashrc ;\
+    echo "export PYTHONPATH=${PYTHONPATH}:/home/omdao//OpenVSP/build/vsp/python_pseudo/PyVSP" >> ~/.bashrc ;\
     echo "" >> ~/.bashrc ;\
     echo "## OpenMPI settings" >> ~/.bashrc ;\
     echo "export OMPI_MCA_rmaps_base_oversubscribe=1" >> ~/.bashrc ;\
@@ -59,7 +61,7 @@ RUN source $HOME/miniforge3/etc/profile.d/conda.sh ;\
     mkdir build ;\
     cd build ;\
     ls -l ../source ;\
-    cmake ../source ;\
+    cmake ../source -DVTK_WRAP_PYTHON=ON;\
     make ;\
     sudo make install
 
@@ -133,9 +135,18 @@ RUN source $HOME/miniforge3/etc/profile.d/conda.sh ;\
     #
     # Install OpenVSP Python support
     #
-    conda install wxPython ;\
+    pip install wxPython ;\
     cd $HOME/OpenVSP/build/vsp/python_pseudo ;\
-    pip install -r requirements-dev.txt
+    pip install utilities/. ;\
+    pip install degen_geom/. ;\
+    pip install openvsp_config/. ;\
+    pip install openvsp/. ;\
+    pip install CHARM/. ;\
+    pip install AvlPy/. ;\
+    pip install pyPMARC/.
+    # pip doesn't recognize vtk in PYTHONPATH as satisfying the vtk dependency
+    # for pyVSP, so we'll just hack this into PYTHONPATH as well 
+    # pip install PyVSP/.
 
 # Set up a work directory that can be shared with the host operating system
 WORKDIR /home/${USER}/work
