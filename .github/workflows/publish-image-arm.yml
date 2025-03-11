@@ -21,7 +21,7 @@ run-name:  'Publish Image: ${{ inputs.image_name }}'
 jobs:
   build:
 
-    runs-on: macos-latest
+    runs-on: ubuntu-24.04-arm
     permissions:
       contents: read
       packages: write
@@ -32,16 +32,6 @@ jobs:
 
       - run: |
           git checkout -b ${{ inputs.image_name }}
-
-      - run: |
-          security -v unlock-keychain ~/Library/Keychains/login.keychain-db
-
-      - run: |
-          brew install docker docker-machine
-          brew install virtualbox
-          docker-machine create --driver virtualbox --virtualbox-no-vtx-check default
-      # docker-machine env default
-      # eval "$(docker-machine env default)"
 
       # Login against a Docker registry
       # https://github.com/docker/login-action
