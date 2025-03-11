@@ -41,12 +41,11 @@ jobs:
           security -v unlock-keychain ~/Library/Keychains/login.keychain-db
 
       - run: |
-          sudo
           export HOMEBREW_GITHUB_API_TOKEN=${{ github.token }}
-          sudo brew install docker docker-machine virtualbox
-          sudo curl -Lo ~/.docker/machine/cache/boot2docker.iso https://github.com/boot2docker/boot2docker/releases/download/v19.03.12/boot2docker.iso
-          sudo docker-machine create --driver virtualbox --virtualbox-memory 4096 --virtualbox-no-vtx-check default
-          sudo docker-machine ls
+          brew install docker docker-machine virtualbox
+          curl -Lo ~/.docker/machine/cache/boot2docker.iso https://github.com/boot2docker/boot2docker/releases/download/v19.03.12/boot2docker.iso
+          docker-machine create --driver virtualbox --virtualbox-memory 4096 --virtualbox-no-vtx-check default
+          docker-machine ls
           sudo docker-machine start default
       # echo "$(docker-machine env default)"
       # eval "$(docker-machine env default)"
