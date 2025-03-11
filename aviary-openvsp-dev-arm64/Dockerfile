@@ -30,7 +30,8 @@ RUN wget -q -O Miniforge3.sh "https://github.com/conda-forge/miniforge/releases/
     bash Miniforge3.sh -b ;\
     rm Miniforge3.sh ;\
     export PATH=$HOME/miniforge3/bin:$PATH ;\
-    conda init bash
+    conda init bash ;\
+    rm Miniforge3.sh
 
 # Create conda environment
 RUN source $HOME/miniforge3/etc/profile.d/conda.sh ;\
@@ -62,7 +63,8 @@ RUN source $HOME/miniforge3/etc/profile.d/conda.sh ;\
     ls -l ../source ;\
     cmake ../source -DVTK_WRAP_PYTHON=ON;\
     make ;\
-    sudo make install
+    sudo make install ;\
+    rm VTK-9.4.1.tar.gz
 
 # Build and Install OpenVSP (based on script from Irian Ordaz @ LARC)
 RUN source $HOME/miniforge3/etc/profile.d/conda.sh ;\
