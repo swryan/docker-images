@@ -39,8 +39,7 @@ RUN source $HOME/miniforge3/etc/profile.d/conda.sh ;\
 # Modify .bashrc
 RUN echo "## Always activate mdaowork environment on startup ##" >> ~/.bashrc ;\
     echo "conda activate mdaowork" >> ~/.bashrc ;\
-    echo "export PYTHONPATH=${PYTHONPATH}:/home/omdao/vtk/build/lib/python3.11/site-packages" >> ~/.bashrc ;\
-    echo "export PYTHONPATH=${PYTHONPATH}:/home/omdao//OpenVSP/build/vsp/python_pseudo/PyVSP" >> ~/.bashrc ;\
+    echo "export PYTHONPATH=${PYTHONPATH}:$HOME/vtk/build/lib/python3.11/site-packages:$HOME/OpenVSP/build/vsp/python_pseudo/PyVSP" >> ~/.bashrc ;\
     echo "" >> ~/.bashrc ;\
     echo "## OpenMPI settings" >> ~/.bashrc ;\
     echo "export OMPI_MCA_rmaps_base_oversubscribe=1" >> ~/.bashrc ;\
@@ -143,10 +142,18 @@ RUN source $HOME/miniforge3/etc/profile.d/conda.sh ;\
     pip install openvsp/. ;\
     pip install CHARM/. ;\
     pip install AvlPy/. ;\
-    pip install pyPMARC/.
-    # pip doesn't recognize vtk in PYTHONPATH as satisfying the vtk dependency
-    # for pyVSP, so we'll just hack this into PYTHONPATH as well 
+    pip install pyPMARC/. ;\
+    # pip doesn't recognize vtk in PYTHONPATH as satisfying the vtk dependency for PyVSP,
+    # so we'll just hack this into PYTHONPATH as well.
     # pip install PyVSP/.
+    #
+    # fix for this warning:
+    # WARNING 7: VSPAERO Viewer Not Found.
+    #     Expected here: /home/omdao/miniforge3/envs/mdaowork/lib/python3.11/site-packages/openvsp/vspviewer
+    VSPVIEWER_DIR=$CONDA_PREFIX/lib/python3.11/site-packages/openvsp/vspviewer ;\
+    mkdir $VSPVIEWER_DIR ;\
+    cp $CONDA_PREFIX/lib/python3.11/site-packages/openvsp/vspaero $VSPVIEWER_DIR ;\
+    cp $CONDA_PREFIX/lib/python3.11/site-packages/openvsp/vsploads $VSPVIEWER_DIR
 
 # Set up a work directory that can be shared with the host operating system
 WORKDIR /home/${USER}/work
