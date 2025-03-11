@@ -45,7 +45,7 @@ jobs:
           brew install docker docker-machine
           brew install virtualbox
           docker-machine create --driver virtualbox --virtualbox-memory 4096 --virtualbox-no-vtx-check default
-          docker-machine start docker-machine
+          docker-machine start default
       # echo "$(docker-machine env default)"
       # eval "$(docker-machine env default)"
 
