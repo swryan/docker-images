@@ -1,4 +1,4 @@
-name: Publish ARM64 Image
+name: Publish ARM64 Image (MacOS)
 
 on:
   # Run the workflow manually from the Actions tab
@@ -37,10 +37,10 @@ jobs:
           security -v unlock-keychain ~/Library/Keychains/login.keychain-db
 
       - run: |
+          export HOMEBREW_GITHUB_API_TOKEN=${{ github.token }}
           brew install docker docker-machine
           brew install virtualbox
           docker-machine create --driver virtualbox --virtualbox-no-vtx-check default
-        with:
           HOMEBREW_GITHUB_API_TOKEN: ${{ github.token }}
       # docker-machine env default
       # eval "$(docker-machine env default)"
