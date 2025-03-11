@@ -40,8 +40,7 @@ jobs:
           export HOMEBREW_GITHUB_API_TOKEN=${{ github.token }}
           brew install docker docker-machine
           brew install virtualbox
-          docker-machine create --driver virtualbox --virtualbox-no-vtx-check default
-          HOMEBREW_GITHUB_API_TOKEN: ${{ github.token }}
+          docker-machine create --driver virtualbox --virtualbox-memory 4096 --virtualbox-no-vtx-check default
       # docker-machine env default
       # eval "$(docker-machine env default)"
 
