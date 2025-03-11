@@ -19,7 +19,7 @@ env:
 run-name:  'Publish Image: ${{ inputs.image_name }}'
 
 jobs:
-  build:
+  build_image:
 
     runs-on: ubuntu-latest
     permissions:

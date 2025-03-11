@@ -19,12 +19,16 @@ env:
 run-name:  'Publish Image: ${{ inputs.image_name }}'
 
 jobs:
-  build:
+  build_image:
 
     runs-on: macos-14
     permissions:
       contents: read
       packages: write
+
+    defaults:
+      run:
+        shell: bash -l {0}
 
     steps:
       - name: Checkout repository
