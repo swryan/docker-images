@@ -8,7 +8,7 @@ ARG DEBIAN_FRONTEND=noninteractive
 
 # Install updates
 RUN apt-get update -y && apt-get install \
-    python3-dev python3-sphinx vim unzip wget file desktop-file-utils git sudo make cmake swig g++ gfortran doxygen graphviz texlive-latex-base \
+    python3-dev python3-sphinx vim unzip wget file desktop-file-utils git sudo make cmake swig g++ gfortran doxygen graphviz texlive-latex-base protobuf-compiler \
     libblas-dev liblapack-dev libxml2-dev libfltk1.3-dev libcpptest-dev libjpeg-dev libglm-dev libeigen3-dev libcminpack-dev libglew-dev -y
 
 # install a browser
