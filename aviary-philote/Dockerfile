@@ -81,7 +81,7 @@ RUN source $HOME/miniforge3/etc/profile.d/conda.sh ;\
     #
     conda install wxPython ;\
     cd $HOME/OpenVSP/build/vsp/python_pseudo ;\
-    pip install -r requirements-dev.txt
+    pip install -r requirements-dev.txt ;\
     #
     # Install Philote
     #
