@@ -37,10 +37,49 @@ RUN wget -q -O Miniforge3.sh "https://github.com/conda-forge/miniforge/releases/
 
 # Create conda environment
 RUN source $HOME/miniforge3/etc/profile.d/conda.sh ;\
+    conda create -n mdaowork python=3.11 'numpy<2' scipy cython swig -y
+
+# Modify .bashrc
+RUN echo "## Always activate mdaowork environment on startup ##" >> ~/.bashrc ;\
+    echo "conda activate mdaowork" >> ~/.bashrc ;\
+    echo "" >> ~/.bashrc ;\
+    echo "## OpenMPI settings" >> ~/.bashrc ;\
+    echo "export OMPI_MCA_rmaps_base_oversubscribe=1" >> ~/.bashrc ;\
+    echo "export OMPI_MCA_btl=^openib" >> ~/.bashrc ;\
+    echo "" >> ~/.bashrc ;\
+    echo "## Required for some newer MPI / libfabric instances" >> ~/.bashrc ;\
+    echo "export RDMAV_FORK_SAFE=true" >> ~/.bashrc ;\
+    echo "" >> ~/.bashrc
+
+# Build and Install OpenVSP (based on script from Irian Ordaz @ LARC)
+RUN source $HOME/miniforge3/etc/profile.d/conda.sh ;\
+    conda activate mdaowork ;\
+    mkdir OpenVSP && cd OpenVSP ;\
+    git clone https://github.com/OpenVSP/OpenVSP.git repo ;\
+    cd repo ;\
+    git checkout tags/OpenVSP_3.41.1 -b OpenVSP_3.41.1 ;\
+    cd .. ;\
+    mkdir -p build/Libraries build/vsp ;\
+    cd build/Libraries ;\
+    cmake -DCMAKE_BUILD_TYPE=Release -DVSP_NO_GRAPHICS=true ../../repo/Libraries ;\
+    make ;\
+    cd ../vsp ;\
+    cmake -DCMAKE_BUILD_TYPE=Release -DVSP_NO_GRAPHICS=true \
+          -DPYTHON_LIBRARY=$HOME/miniforge3/envs/mdaowork/lib/libpython3.so \
+          -DPYTHON_INCLUDE_DIR=$HOME/miniforge3/envs/mdaowork/include/python3.11 \
+          -DVSP_LIBRARY_PATH=$HOME/OpenVSP/build/Libraries \
+          ../../repo/src ;\
+    make ;\
+    cd vsp ;\
+    make;\
+    sudo make install
+
+# Install OpenMDAO/Dymos/Aviary into conda environment
+RUN source $HOME/miniforge3/etc/profile.d/conda.sh ;\
+    conda activate mdaowork ;\
     #
     # Install OpenMDAO/Dymos/Aviary dependencies and OpenVSP Python API
     #
-    conda create -n mdaowork python=3.12 'numpy<2' scipy cython swig -q -y ;\
     conda activate mdaowork ;\
     conda install matplotlib graphviz -q -y ;\
     conda install mpi4py openmpi petsc4py=3.20 pyoptsparse protobuf -q -y ;\
@@ -90,18 +129,6 @@ RUN source $HOME/miniforge3/etc/profile.d/conda.sh ;\
     git submodule init ;\
     git submodule update ;\
     python -m pip install -e .
-
-# Modify .bashrc
-RUN echo "## Always activate mdaowork environment on startup ##" >> ~/.bashrc ;\
-    echo "conda activate mdaowork" >> ~/.bashrc ;\
-    echo "" >> ~/.bashrc ;\
-    echo "## OpenMPI settings" >> ~/.bashrc ;\
-    echo "export OMPI_MCA_rmaps_base_oversubscribe=1" >> ~/.bashrc ;\
-    echo "export OMPI_MCA_btl=^openib" >> ~/.bashrc ;\
-    echo "" >> ~/.bashrc ;\
-    echo "## Required for some newer MPI / libfabric instances" >> ~/.bashrc ;\
-    echo "export RDMAV_FORK_SAFE=true" >> ~/.bashrc ;\
-    echo "" >> ~/.bashrc
 
 # Make script  to run server (same as .bashrc, but run server at the end)
 RUN echo "source $HOME/miniforge3/etc/profile.d/conda.sh" >> ~/run_server.sh ;\
