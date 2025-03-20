@@ -22,8 +22,6 @@ class NPSSDiscipline(pmdo.ExplicitDiscipline):
             units = meta['units']
             self.add_input(name, shape=meta['shape'], units=units if units else '')
 
-        self.npss.model.list_outputs(shape=True, units=True)
-
         for name, meta in self.npss.model.list_outputs(shape=True, units=True, val=False):
             name = name[5:]  # strip the npss. prefix
             units = meta['units']
