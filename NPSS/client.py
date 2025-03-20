@@ -12,25 +12,25 @@ model.add_subsystem(
     promotes=["*"],
 )
 
-print("client setup()")
 prob.setup()
+prob.final_setup()
+
+print("=========================================================================")
+
+prob.set_val("Alt_DES", 30000.)
+prob.set_val("MN_DES", 0.7)
+
+prob.run_model()
 
 prob.model.list_inputs(shape=True, units=True)
 prob.model.list_outputs(shape=True, units=True)
 
-print("client final_setup()")
-prob.final_setup()
+print("=========================================================================")
 
-print("client set input Alt_DES")
-prob.set_val("Alt_DES", 30000.)
+prob.set_val("Alt_DES", 25000.)
+prob.set_val("MN_DES", 0.5)
 
-print("client set input MN_DES")
-prob.set_val("MN_DES", 0.7)
-
-print("client run_model()")
 prob.run_model()
 
-print("client list_outputs()")
-prob.model.list_outputs()
-
-print(prob["Fn_SLS"])
+prob.model.list_inputs(shape=True, units=True)
+prob.model.list_outputs(shape=True, units=True)

@@ -5,11 +5,17 @@ FROM debian:bookworm
 
 SHELL ["/bin/bash", "-c"]
 
-COPY Miniforge3-Linux-x86_64.sh Miniforge3-Linux-x86_64.sh
+# Install system dependencies
+RUN apt-get update -y && apt-get install \
+    wget git apt-utils build-essential pkg-config  openjdk-17-jre \
+    g++-multilib gcc-multilib gfortran-multilib sigc++ libsigc++ \
+    liblapack-dev libblas-dev libopenblas-dev libncurses-dev libxkbcommon-dev \
+    libnss3 libnspr4 libgbm1 libasound2 python3-pip cython3 python-is-python3 -y
 
 # Install Miniforge
-RUN bash Miniforge3-Linux-x86_64.sh -b ;\
-    rm Miniforge3-Linux-x86_64.sh ;\
+RUN wget -q -O Miniforge3.sh "https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-$(uname)-$(uname -m).sh" ;\
+    bash Miniforge3.sh -b ;\
+    rm Miniforge3.sh ;\
     export PATH=$HOME/miniforge3/bin:$PATH ;\
     conda init bash
 
@@ -21,7 +27,6 @@ COPY server.py server.py
 RUN source $HOME/miniforge3/etc/profile.d/conda.sh ;\
     conda create -n mdaowork python=3.12 'numpy<2' scipy cython swig -q -y ;\
     conda activate mdaowork ;\
-    conda install git gxx=11 libgfortran5 make cmake binutils editline ncurses sigcpp-2.0 libblas liblapack -q -y ;\
     conda install protobuf grpcio grpcio-tools -q -y ;\
     #
     # Install OpenMDAO
@@ -45,13 +50,13 @@ RUN source $HOME/miniforge3/etc/profile.d/conda.sh ;\
     conda info ;\
     conda list
 
-# # build NPSS
-# RUN source $HOME/miniforge3/etc/profile.d/conda.sh ;\
-#     conda activate mdaowork ;\
-#     cd NPSSv32_src ;\
-#     source buildNPSS.sh
+# build NPSS
+RUN source $HOME/miniforge3/etc/profile.d/conda.sh ;\
+    conda activate mdaowork ;\
+    cd NPSSv32_src ;\
+    source buildNPSS.sh
 
-# Make script  to run server 
+# Make script  to run server
 RUN echo "source /root/miniforge3/etc/profile.d/conda.sh" >> /run_server.sh ;\
     echo "conda activate mdaowork" >> /run_server.sh ;\
     echo "" >> /run_server.sh ;\
@@ -65,5 +70,4 @@ RUN echo "source /root/miniforge3/etc/profile.d/conda.sh" >> /run_server.sh ;\
 # Set up a work directory that can be shared with the host operating system
 WORKDIR /work
 
-# ENTRYPOINT ["/bin/bash", "/run_server.sh"]
-ENTRYPOINT ["tail", "-f", "/dev/null"]
+ENTRYPOINT ["/bin/bash", "/run_server.sh"]
