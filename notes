@@ -94,6 +94,9 @@ podman machine start
 podman buildx build --format docker . -t openmdao-dev
 podman push 961549a77c61 docker://docker.io/swryan/openmdao-dev
 
+# podman relies on /etc/subuid and /etc/dubgid
+podman  buildx build --storage-opt  ignore_chown_errors=true   --format docker . -t npss_v32
+
 $ docker login ghcr.io
 Username: swryan
 Password:
