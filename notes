@@ -99,7 +99,21 @@ podman  buildx build --storage-opt  ignore_chown_errors=true   --format docker .
 # after subuid and subgids are set up, the following command is needed:
 podman system migrate
 # then you don't need --storage-opt flag or ignore_chown_errors
-podman  buildx build --format docker . -t npss_v32
+podman buildx build --format docker . -t npss_v32
+podman buildx build --format docker . -f Dockerfile.client -t om-philote
+
+# work in progress...tried running client and server in a pod (not successful yet)
+podman pod create --name npss_pod
+podman run --name npss -v `pwd`:/home/omdao/work:rw localhost/npss_v32:latest &
+podman run --name om-client -v `pwd`:/home/omdao/work:rw  localhost/om-philote:latest &
+podman exec -it om-client /bin/bash
+
+# after running server on hpc, can access via ssh tunnel on desktop:
+ssh -NfL localhost:50051:localhost:50051 user@hpc
+python client.py
+
+conda install -c conda-forge qemu-system-x86_64
+podman machine init podman-machine-default
 
 $ docker login ghcr.io
 Username: swryan
